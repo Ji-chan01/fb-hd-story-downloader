@@ -54,11 +54,32 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
+  let countdownTimer = null;
+
   function setLoading(isLoading) {
     submitBtn.disabled = isLoading;
     btnSpinner.hidden = !isLoading;
     const btnText = submitBtn.querySelector('span');
-    btnText.textContent = isLoading ? 'Searching...' : 'Search Media';
+
+    if (countdownTimer) {
+      clearInterval(countdownTimer);
+      countdownTimer = null;
+    }
+
+    if (isLoading) {
+      let secondsLeft = 10;
+      btnText.textContent = `Searching (${secondsLeft}s)...`;
+      countdownTimer = setInterval(() => {
+        secondsLeft--;
+        if (secondsLeft > 0) {
+          btnText.textContent = `Searching (${secondsLeft}s)...`;
+        } else {
+          btnText.textContent = `Searching (almost done)...`;
+        }
+      }, 1000);
+    } else {
+      btnText.textContent = 'Search Media';
+    }
   }
 
   function showError(msg) {
