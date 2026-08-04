@@ -38,10 +38,9 @@ const apiLimiter = rateLimit({
 
 app.use("/api/", apiLimiter);
 
-// Simple In-Memory Cache (In production, replace with Redis)
+// Disable caching so every user request performs a fresh live scrape
 const cache = new Map();
-cache.clear();
-const CACHE_TTL_MS = 10 * 1000; // 10 seconds — short cache so users get fresh media
+const CACHE_TTL_MS = 0;
 
 // 2. Media Proxy Endpoint — forwards Range headers so video streaming and seeking work
 app.get("/api/proxy-image", async (req, res) => {
@@ -79,7 +78,9 @@ app.get("/api/proxy-image", async (req, res) => {
     }
 
     if (req.query.filename || req.query.dl === "1") {
-      const filename = (req.query.filename || "story-photo.jpg").replace(/[^a-z0-9_.-]/gi, "_");
+      const rawName = req.query.filename || "story-photo.jpg";
+      // Allow alphanumeric, dashes, underscores, dots (for extension)
+      const filename = rawName.replace(/[^a-z0-9_.()-]/gi, "_");
       res.setHeader("Content-Disposition", `attachment; filename="${filename}"`);
     }
 

@@ -1,0 +1,108 @@
+{
+  "name": "CamScope Gold Theme",
+  "description": "Warm editorial / premium-membership theme: cream + navy base with a gold/bronze accent, serif headings paired with sans body copy.",
+  "fonts": {
+    "sans": {
+      "family": "Inter",
+      "fallback": ["Inter Fallback", "system-ui", "sans-serif"],
+      "usage": "Body text, UI elements, buttons, forms"
+    },
+    "serif": {
+      "family": "Lora",
+      "fallback": ["Lora Fallback", "ui-serif", "Georgia", "serif"],
+      "usage": "Headings (h1-h4), editorial/decorative text"
+    },
+    "mono": {
+      "family": "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace",
+      "usage": "Code, tabular/numeric data"
+    }
+  },
+  "radius": {
+    "base": "0.5rem",
+    "lg": "var(--radius)",
+    "md": "calc(var(--radius) - 2px)",
+    "sm": "calc(var(--radius) - 4px)"
+  },
+  "colors": {
+    "light": {
+      "background": { "hsl": "36 33% 97%", "hex": "#FAF6EE", "role": "warm off-white cream page background" },
+      "foreground": { "hsl": "220 47% 11%", "hex": "#0F1A2E", "role": "primary text, deep navy-black" },
+      "card": { "hsl": "0 0% 100%", "hex": "#FFFFFF", "role": "card/surface background" },
+      "cardForeground": { "hsl": "220 47% 11%", "hex": "#0F1A2E" },
+      "popover": { "hsl": "0 0% 100%", "hex": "#FFFFFF" },
+      "popoverForeground": { "hsl": "220 47% 11%", "hex": "#0F1A2E" },
+      "primary": { "hsl": "220 47% 18%", "hex": "#182A4B", "role": "dark navy — primary buttons/brand" },
+      "primaryForeground": { "hsl": "36 33% 97%", "hex": "#FAF6EE" },
+      "secondary": { "hsl": "36 20% 92%", "hex": "#EEE9DF", "role": "light warm tan surface" },
+      "secondaryForeground": { "hsl": "220 47% 18%", "hex": "#182A4B" },
+      "muted": { "hsl": "36 20% 94%", "hex": "#F1EDE3", "role": "pale sand, subdued surfaces" },
+      "mutedForeground": { "hsl": "220 15% 40%", "hex": "#54617A", "role": "slate gray-blue secondary text" },
+      "accent": { "hsl": "39 50% 50%", "hex": "#BF9640", "role": "signature gold/bronze accent" },
+      "accentForeground": { "hsl": "220 47% 11%", "hex": "#0F1A2E" },
+      "destructive": { "hsl": "0 70% 45%", "hex": "#C22626", "role": "errors/danger" },
+      "destructiveForeground": { "hsl": "0 0% 98%", "hex": "#FAFAFA" },
+      "border": { "hsl": "220 13% 88%", "hex": "#DBDEE4" },
+      "input": { "hsl": "220 13% 88%", "hex": "#DBDEE4" },
+      "ring": { "hsl": "39 50% 50%", "hex": "#BF9640" }
+    },
+    "dark": {
+      "background": { "hsl": "0 0% 4%", "hex": "#0A0A0A" },
+      "foreground": { "hsl": "0 0% 98%", "hex": "#FAFAFA" },
+      "card": { "hsl": "0 0% 8%", "hex": "#141414" },
+      "cardForeground": { "hsl": "0 0% 98%", "hex": "#FAFAFA" },
+      "popover": { "hsl": "0 0% 10%", "hex": "#1A1A1A" },
+      "popoverForeground": { "hsl": "0 0% 98%", "hex": "#FAFAFA" },
+      "primary": { "hsl": "0 0% 100%", "hex": "#FFFFFF" },
+      "primaryForeground": { "hsl": "0 0% 0%", "hex": "#000000" },
+      "secondary": { "hsl": "0 0% 13%", "hex": "#212121" },
+      "secondaryForeground": { "hsl": "0 0% 98%", "hex": "#FAFAFA" },
+      "muted": { "hsl": "0 0% 11%", "hex": "#1C1C1C" },
+      "mutedForeground": { "hsl": "0 0% 70%", "hex": "#B3B3B3" },
+      "accent": { "hsl": "39 60% 60%", "hex": "#D9AC52", "role": "brighter gold for dark surfaces" },
+      "accentForeground": { "hsl": "0 0% 0%", "hex": "#000000" },
+      "destructive": { "hsl": "0 70% 50%", "hex": "#D92C2C" },
+      "destructiveForeground": { "hsl": "0 0% 98%", "hex": "#FAFAFA" },
+      "border": { "hsl": "0 0% 22%", "hex": "#383838" },
+      "input": { "hsl": "0 0% 22%", "hex": "#383838" },
+      "ring": { "hsl": "0 0% 70%", "hex": "#B3B3B3" }
+    },
+    "goldScale": {
+      "50": "#FBF8F1",
+      "100": "#F5EBD0",
+      "200": "#EDD79C",
+      "300": "#E0BC67",
+      "400": "#C9A14B",
+      "500": "#A88438",
+      "600": "#84682B",
+      "700": "#5D4A1F",
+      "800": "#3D3015",
+      "900": "#1F180A"
+    },
+    "navyScale": {
+      "50": "#F1F4F9",
+      "400": "#5E7CA5",
+      "700": "#1B2D4E",
+      "900": "#08111F"
+    }
+  },
+  "effects": {
+    "vipShimmer": {
+      "description": "Pulsing gold text glow used for VIP/premium labels",
+      "colors": ["#C9A14B", "#E0BC67"],
+      "duration": "2.4s ease-in-out infinite"
+    },
+    "vipNeonBorder": {
+      "description": "Rotating conic-gradient rainbow-gold border for premium cards",
+      "gradient": "conic-gradient(from var(--angle), #fbbf24 0%, #f472b6 25%, #60a5fa 50%, #34d399 75%, #fbbf24 100%)",
+      "duration": "4s linear infinite"
+    }
+  },
+  "shadows": {
+    "sm": "0 1px 2px 0 rgb(0 0 0 / 0.05)",
+    "md": "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)",
+    "lg": "0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)",
+    "xl": "0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)",
+    "2xl": "0 25px 50px -12px rgb(0 0 0 / 0.25)",
+    "goldGlow": "0 0 8px rgba(224, 188, 103, 0.6)"
+  }
+}

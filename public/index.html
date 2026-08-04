@@ -1,111 +1,885 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Public Media Viewer & Downloader</title>
-  <link rel="stylesheet" href="style.css">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-</head>
-<body>
-  
-  <!-- Header / Nav -->
-  <header class="app-header">
-    <div class="container nav-content">
-      <div class="logo">
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
-        </svg>
-        <span>MediaViewer</span>
-      </div>
-      <nav class="nav-links">
-        <a href="#how-it-works">How It Works</a>
-        <a href="#faq">FAQ</a>
-      </nav>
-    </div>
-  </header>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>IncognitoFB - Anonymous FB HD Story Viewer</title>
+    <meta
+      name="description"
+      content="View and download public Facebook HD stories anonymously. No login required."
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+      .bg-grid-pattern {
+        background-color: #121212;
+        background-image:
+          linear-gradient(
+            to right,
+            rgba(255, 255, 255, 0.04) 1px,
+            transparent 1px
+          ),
+          linear-gradient(
+            to bottom,
+            rgba(255, 255, 255, 0.04) 1px,
+            transparent 1px
+          );
+        background-size: 80px 80px;
+      }
+      #media-modal {
+        display: none;
+        align-items: center;
+        justify-content: center;
+      }
+      .spinner {
+        width: 18px;
+        height: 18px;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-top-color: #fff;
+        border-radius: 50%;
+        animation: spin 0.7s linear infinite;
+        display: inline-block;
+        vertical-align: middle;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      /* Mobile Panel Slide Transition */
+      #mobile-nav-panel {
+        max-height: 0;
+        opacity: 0;
+        overflow: hidden;
+        transition:
+          max-height 0.3s ease-out,
+          opacity 0.2s ease-out;
+      }
+      #mobile-nav-panel.open {
+        max-height: 200px;
+        opacity: 1;
+      }
+      /* Main Content Push Transition */
+      main {
+        transition: padding-top 0.3s ease-out;
+      }
+      main.mobile-menu-open {
+        padding-top: 240px; /* pushes main content down when menu opens */
+      }
+    </style>
+  </head>
+  <body
+    class="bg-grid-pattern text-gray-200 font-sans antialiased min-h-screen flex flex-col"
+  >
+    <!-- Header -->
+    <header
+      class="fixed top-0 left-0 right-0 w-full bg-[#121212]/80 backdrop-blur-md border-b border-white/5 z-50 transition-all"
+    >
+      <div
+        class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between"
+      >
+        <a href="#" class="flex items-center space-x-3 group">
+          <div
+            class="text-white p-1 rounded-full border border-white/20 group-hover:border-white transition-colors"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="w-7 h-7"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M12 2a10 10 0 1 0 10 10 4 4 0 0 1-5-3.5 3 3 0 1 0-3 3" />
+            </svg>
+          </div>
+          <span class="text-2xl font-semibold tracking-tight text-white"
+            >IncognitoFB</span
+          >
+        </a>
 
-  <!-- Top Ad Slot (Leaderboard Banner 728x90) -->
-  <div class="ad-container ad-top">
-    <div class="ad-placeholder">
-      <span class="ad-label">ADVERTISEMENT</span>
-      <div class="ad-box leaderboard">728 x 90 Leaderboard Ad</div>
-    </div>
-  </div>
+        <!-- Desktop Nav -->
+        <nav class="hidden md:flex items-center space-x-8 text-md font-medium">
+          <a href="#how-it-works" class="hover:text-white transition-colors"
+            >How This Works?</a
+          >
+          <a href="#faq" class="hover:text-white transition-colors">FAQ</a>
+        </nav>
 
-  <main class="container">
-    <!-- Search Section -->
-    <section class="search-section">
-      <h1>Anonymous Facebook Media Viewer</h1>
-      <p class="subtitle">View and download public Facebook photos, cover images, and media instantly.</p>
-      
-      <form id="search-form" class="search-box">
-        <div class="input-wrapper">
-          <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="11" cy="11" r="8"></circle>
-            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-          </svg>
-          <input type="text" id="profile-input" placeholder="Paste Facebook profile link or username (e.g. zuck)..." required autocomplete="off">
-          <button type="button" id="paste-btn" class="btn-secondary">Paste</button>
-        </div>
-        <button type="submit" id="submit-btn" class="btn-primary">
-          <span>Search Media</span>
-          <div class="spinner" id="btn-spinner" hidden></div>
+        <!-- Mobile Nav Toggle Button -->
+        <button
+          id="mobile-nav-toggle"
+          type="button"
+          class="md:hidden text-white p-1 rounded-full border border-white/20 hover:border-white transition-colors flex items-center justify-center"
+          aria-label="Toggle Menu"
+        >
+          <i
+            id="mobile-nav-icon"
+            data-lucide="chevron-down"
+            class="w-6 h-6 transition-transform"
+          ></i>
         </button>
-      </form>
+      </div>
 
-      <div id="error-box" class="error-box" hidden></div>
-    </section>
+      <!-- Mobile Nav Dropdown Panel -->
+      <div
+        id="mobile-nav-panel"
+        class="bg-[#121212]/80 backdrop-blur-md px-6 flex flex-col space-y-3 text-sm font-medium pb-4"
+      >
+        <a
+          href="#how-it-works"
+          class="hover:text-white transition-colors py-2 mt-2 block"
+          >How This Works?</a
+        >
+        <a href="#faq" class="hover:text-white transition-colors py-2 block"
+          >FAQ</a
+        >
+      </div>
+    </header>
 
-    <!-- Mid-Content Ad Slot (In-feed Native / Banner) -->
-    <div class="ad-container ad-mid">
-      <div class="ad-placeholder">
-        <span class="ad-label">ADVERTISEMENT</span>
-        <div class="ad-box banner-mid">Responsive Native Banner Ad</div>
+    <main class="w-full max-w-7xl mx-auto px-6 flex-grow space-y-24 pt-28">
+      <!-- Hero -->
+      <section class="flex flex-col items-center text-center pt-12 pb-6">
+        <h1
+          class="text-3xl md:text-5xl font-bold text-white tracking-wide mb-8"
+        >
+          Anonymous FB HD Story Viewer
+        </h1>
+        <form id="search-form" class="w-full flex flex-col items-center gap-4">
+          <div
+            class="w-full max-w-2xl bg-[#222222]/90 border border-neutral-700/60 rounded-lg p-2 flex items-center shadow-lg backdrop-blur-sm"
+          >
+            <input
+              type="text"
+              id="profile-input"
+              placeholder="Enter profile link here"
+              autocomplete="off"
+              required
+              class="w-full bg-transparent px-4 py-2 text-gray-200 placeholder-gray-500 focus:outline-none text-base"
+            />
+            <button
+              type="button"
+              id="paste-btn"
+              class="bg-[#444444] hover:bg-[#555555] text-gray-200 px-6 py-2 rounded font-medium text-sm transition-colors whitespace-nowrap"
+            >
+              Paste
+            </button>
+          </div>
+          <button
+            type="submit"
+            id="submit-btn"
+            class="bg-[#ff621f] hover:bg-[#e05316] disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold tracking-wider px-10 py-3 rounded-md uppercase transition-colors shadow-md flex items-center gap-3"
+          >
+            <span id="btn-text">SEARCH</span>
+            <div id="btn-spinner" class="spinner" hidden></div>
+          </button>
+        </form>
+        <div
+          id="error-box"
+          class="w-full max-w-2xl mt-4 bg-red-900/30 border border-red-500/50 text-red-400 rounded-lg px-4 py-3 text-sm text-left"
+          hidden
+        ></div>
+
+        <div class="w-full max-w-3xl flex flex-col items-center mt-10">
+          <span class="text-xs tracking-widest text-gray-500 uppercase mb-3"
+            >Advertisement</span
+          >
+          <div
+            class="w-full h-56 bg-[#1e1e1e] rounded-2xl border border-neutral-800"
+          ></div>
+        </div>
+      </section>
+
+      <!-- Results -->
+      <section id="results-section" class="space-y-8" hidden>
+        <div
+          class="w-full border border-neutral-600 rounded-2xl p-6 flex items-center space-x-6 bg-[#1a1a1a]/40 backdrop-blur-sm"
+        >
+          <img
+            id="profile-avatar"
+            src=""
+            alt="Profile Avatar"
+            class="w-20 h-20 rounded-full object-cover bg-neutral-600 flex-shrink-0"
+          />
+          <div class="flex flex-col">
+            <h2 id="profile-name" class="text-2xl font-bold text-white"></h2>
+            <span id="profile-handle" class="text-gray-400 text-lg"></span>
+          </div>
+        </div>
+        <div class="space-y-6">
+          <h3 class="text-2xl font-bold text-white">Available Stories</h3>
+          <div
+            id="media-grid"
+            class="grid grid-cols-2 md:grid-cols-4 gap-6"
+          ></div>
+        </div>
+      </section>
+
+      <!-- How It Works -->
+      <section id="how-it-works" class="pt-8 space-y-16">
+        <h2 class="text-3xl md:text-4xl font-bold text-white">
+          How this Works?
+        </h2>
+        <div class="space-y-20">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+            <div
+              class="aspect-[4/3] w-full bg-[#1c1c1c] rounded-3xl border-2 border-neutral-200/80 flex items-center justify-center"
+            >
+              <span class="text-4xl font-bold text-white tracking-widest"
+                >IMG</span
+              >
+            </div>
+            <div class="space-y-4">
+              <h3 class="text-xl md:text-2xl font-bold text-white">
+                <span class="font-normal">1.</span> Copy profile link
+              </h3>
+              <p class="text-gray-400 leading-relaxed text-sm md:text-base">
+                Lorem Ipsum is simply dummy text of the printing and typesetting
+                industry. Lorem Ipsum has been the industry's standard dummy
+                text ever since 1966, when designers at Letraset and James
+                Mosley, the librarian at St Bride Printing Library in London,
+                took a 1914 Cicero translation and scrambled it to make dummy
+                text for Letraset's Body Type sheets.
+              </p>
+            </div>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+            <div
+              class="aspect-[4/3] w-full bg-[#1c1c1c] rounded-3xl border-2 border-neutral-200/80 flex items-center justify-center"
+            >
+              <span class="text-4xl font-bold text-white tracking-widest"
+                >IMG</span
+              >
+            </div>
+            <div class="space-y-4">
+              <h3 class="text-xl md:text-2xl font-bold text-white">
+                <span class="font-normal">2.</span> Paste profile link here
+              </h3>
+              <p class="text-gray-400 leading-relaxed text-sm md:text-base">
+                Lorem Ipsum is simply dummy text of the printing and typesetting
+                industry. Lorem Ipsum has been the industry's standard dummy
+                text ever since 1966, when designers at Letraset and James
+                Mosley, the librarian at St Bride Printing Library in London,
+                took a 1914 Cicero translation and scrambled it to make dummy
+                text for Letraset's Body Type sheets.
+              </p>
+            </div>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+            <div
+              class="aspect-[4/3] w-full bg-[#1c1c1c] rounded-3xl border-2 border-neutral-200/80 flex items-center justify-center"
+            >
+              <span class="text-4xl font-bold text-white tracking-widest"
+                >IMG</span
+              >
+            </div>
+            <div class="space-y-4">
+              <h3 class="text-xl md:text-2xl font-bold text-white">
+                <span class="font-normal">3.</span> Review or Save the File!
+              </h3>
+              <p class="text-gray-400 leading-relaxed text-sm md:text-base">
+                Lorem Ipsum is simply dummy text of the printing and typesetting
+                industry. Lorem Ipsum has been the industry's standard dummy
+                text ever since 1966, when designers at Letraset and James
+                Mosley, the librarian at St Bride Printing Library in London,
+                took a 1914 Cicero translation and scrambled it to make dummy
+                text for Letraset's Body Type sheets.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- FAQ -->
+      <section id="faq" class="pt-8 space-y-8">
+        <h2 class="text-3xl md:text-4xl font-bold text-white">
+          Frequently Asked Questions (FAQ)
+        </h2>
+        <div class="space-y-4">
+          <details class="group rounded-xl bg-black overflow-hidden">
+            <summary
+              class="flex justify-between items-center p-5 text-lg font-medium text-gray-200 cursor-pointer list-none select-none"
+            >
+              <span>Do I need to log into my Facebook account?</span>
+              <i
+                data-lucide="chevron-down"
+                class="w-6 h-6 transition-transform group-open:rotate-180"
+              ></i>
+            </summary>
+            <div
+              class="p-5 pt-0 text-gray-400 border-t border-neutral-800/50 mt-2"
+            >
+              No, you do not need to log into your account. The tool works
+              completely anonymously without requiring login credentials.
+            </div>
+          </details>
+          <details class="group rounded-xl bg-black overflow-hidden">
+            <summary
+              class="flex justify-between items-center p-5 text-lg font-medium text-gray-200 cursor-pointer list-none select-none"
+            >
+              <span>Does this website collect or store my personal data?</span>
+              <i
+                data-lucide="chevron-down"
+                class="w-6 h-6 transition-transform group-open:rotate-180"
+              ></i>
+            </summary>
+            <div
+              class="p-5 pt-0 text-gray-400 border-t border-neutral-800/50 mt-2"
+            >
+              No personal data is collected or stored. All requests are
+              processed on-the-fly and destroyed immediately after your session
+              ends.
+            </div>
+          </details>
+          <details class="group rounded-xl bg-black overflow-hidden">
+            <summary
+              class="flex justify-between items-center p-5 text-lg font-medium text-gray-200 cursor-pointer list-none select-none"
+            >
+              <span>Can I view stories from private Facebook accounts?</span>
+              <i
+                data-lucide="chevron-down"
+                class="w-6 h-6 transition-transform group-open:rotate-180"
+              ></i>
+            </summary>
+            <div
+              class="p-5 pt-0 text-gray-400 border-t border-neutral-800/50 mt-2"
+            >
+              No. This tool strictly accesses publicly available information and
+              cannot bypass private security settings.
+            </div>
+          </details>
+          <details class="group rounded-xl bg-black overflow-hidden">
+            <summary
+              class="flex justify-between items-center p-5 text-lg font-medium text-gray-200 cursor-pointer list-none select-none"
+            >
+              <span>Is this tool completely anonymous?</span>
+              <i
+                data-lucide="chevron-down"
+                class="w-6 h-6 transition-transform group-open:rotate-180"
+              ></i>
+            </summary>
+            <div
+              class="p-5 pt-0 text-gray-400 border-t border-neutral-800/50 mt-2"
+            >
+              Yes, story owners will not see your profile listed in their story
+              viewer list.
+            </div>
+          </details>
+        </div>
+      </section>
+    </main>
+
+    <!-- Combined Pure Black Footer -->
+    <footer class="w-full bg-black border-t border-neutral-900 mt-24">
+      <div class="max-w-7xl mx-auto px-6 pt-16 pb-12 space-y-12">
+        <!-- Footer Columns (Info) -->
+        <div
+          class="grid grid-cols-1 md:grid-cols-3 gap-8 pb-12 border-b border-neutral-800"
+        >
+          <div class="space-y-4">
+            <h3 class="text-lg font-bold text-white">About This Tool</h3>
+            <p class="text-sm text-gray-400 leading-relaxed">
+              This website is a privacy-focused utility designed for users who
+              wish to view public Facebook stories without revealing their
+              personal profiles. It cannot bypass private account restrictions
+              or security settings.
+            </p>
+          </div>
+          <div class="space-y-4">
+            <h3 class="text-lg font-bold text-white">Disclaimer &amp; Risk</h3>
+            <p class="text-sm text-gray-400 leading-relaxed">
+              This website is completely independent. Use of this application is
+              entirely at your own risk. The developer assumes no responsibility
+              for any account actions or data loss.
+            </p>
+          </div>
+          <div class="space-y-4">
+            <h3 class="text-lg font-bold text-white">Trademark Notice</h3>
+            <p class="text-sm text-gray-400 leading-relaxed">
+              This website is not affiliated with, authorized, or endorsed by
+              Meta Platforms, Inc., or Facebook. All product names are
+              trademarks of their original owners.
+            </p>
+          </div>
+        </div>
+
+        <!-- Footer Bar (Copyright + Socials) -->
+        <div
+          class="flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0 text-xs text-gray-400"
+        >
+          <div>&copy; 2026 IncognitoFB by HannApp | All Rights Reserved</div>
+          <a
+            href="#"
+            class="text-white hover:text-gray-300 transition-colors"
+            aria-label="Facebook Page"
+          >
+            <i
+              data-lucide="facebook"
+              class="w-6 h-6 fill-current stroke-none"
+            ></i>
+          </a>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Modal -->
+    <div
+      id="media-modal"
+      class="fixed inset-0 z-[100] bg-black/80 backdrop-blur-md"
+    >
+      <div class="absolute inset-0" id="modal-overlay"></div>
+      <div
+        class="relative z-[110] bg-[#1a1a1a] border border-white/10 rounded-2xl w-[90vw] max-w-lg flex flex-col shadow-2xl"
+        style="
+          max-height: 90vh;
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+        "
+      >
+        <button
+          id="modal-close"
+          class="absolute top-3 right-4 text-gray-400 hover:text-white text-2xl z-[120] bg-white/5 hover:bg-white/10 rounded-full w-9 h-9 flex items-center justify-center transition-colors"
+        >
+          &times;
+        </button>
+        <!-- Media area -->
+        <div
+          class="modal-media-wrapper flex items-center justify-center rounded-t-2xl overflow-hidden bg-black"
+          style="flex: 1; min-height: 0; max-height: 55vh"
+        >
+          <img
+            id="modal-img"
+            src=""
+            alt=""
+            class="max-w-full max-h-full object-contain"
+          />
+        </div>
+        <!-- Controls always visible below media -->
+        <div id="modal-controls" class="p-4 flex flex-col gap-3 flex-shrink-0">
+          <button
+            id="download-btn"
+            type="button"
+            class="w-full bg-[#ff621f] hover:bg-[#e05316] text-white font-semibold py-3 rounded-lg transition-colors"
+          >
+            Download High Res
+          </button>
+        </div>
       </div>
     </div>
 
-    <!-- Results Section -->
-    <section id="results-section" class="results-section" hidden>
-      <div class="profile-card">
-        <img id="profile-avatar" src="" alt="Profile Avatar" class="avatar">
-        <div class="profile-info">
-          <h2 id="profile-name"></h2>
-          <p id="profile-handle" class="handle"></p>
-        </div>
-      </div>
+    <script>
+      lucide.createIcons();
+    </script>
 
-      <h3 class="section-title">Available Media Stories</h3>
-      <div id="media-grid" class="media-grid"></div>
-    </section>
-  </main>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        // ── Elements ──────────────────────────────────────────────────────────
+        const form = document.getElementById("search-form");
+        const input = document.getElementById("profile-input");
+        const pasteBtn = document.getElementById("paste-btn");
+        const submitBtn = document.getElementById("submit-btn");
+        const btnSpinner = document.getElementById("btn-spinner");
+        const btnText = document.getElementById("btn-text");
+        const errorBox = document.getElementById("error-box");
+        const resultsSection = document.getElementById("results-section");
+        const profileAvatar = document.getElementById("profile-avatar");
+        const profileName = document.getElementById("profile-name");
+        const profileHandle = document.getElementById("profile-handle");
+        const mediaGrid = document.getElementById("media-grid");
+        const modal = document.getElementById("media-modal");
+        const modalClose = document.getElementById("modal-close");
+        const modalOverlay = document.getElementById("modal-overlay");
 
-  <!-- Bottom Sticky Ad Slot -->
-  <div class="ad-container ad-footer-sticky">
-    <div class="ad-placeholder">
-      <span class="ad-label">ADVERTISEMENT</span>
-      <div class="ad-box sticky-banner">320x50 / 728x90 Mobile & Desktop Sticky Banner</div>
-    </div>
-  </div>
+        // ── Mobile Header Accordion Navigation ────────────────────────────────
+        const mobileToggle = document.getElementById("mobile-nav-toggle");
+        const mobilePanel = document.getElementById("mobile-nav-panel");
+        const mobileIcon = document.getElementById("mobile-nav-icon");
 
-  <!-- Media Download Modal -->
-  <div id="media-modal" class="modal" hidden>
-    <div class="modal-overlay" id="modal-overlay"></div>
-    <div class="modal-content">
-      <button class="modal-close" id="modal-close">&times;</button>
-      <div class="modal-body">
-        <div class="modal-media-wrapper">
-          <img id="modal-img" src="" alt="Media Preview">
-        </div>
-        <div class="modal-actions">
-          <a id="download-btn" href="#" download class="btn-primary download-link">Download High Res</a>
-        </div>
-      </div>
-    </div>
-  </div>
+        const mainContent = document.querySelector("main");
 
-  <script src="app.js"></script>
-</body>
+        if (mobileToggle && mobilePanel) {
+          mobileToggle.addEventListener("click", () => {
+            const isOpen = mobilePanel.classList.toggle("open");
+            if (mainContent) {
+              mainContent.classList.toggle("mobile-menu-open", isOpen);
+            }
+            if (mobileIcon) {
+              if (isOpen) {
+                mobileIcon.style.transform = "rotate(180deg)";
+              } else {
+                mobileIcon.style.transform = "rotate(0deg)";
+              }
+            }
+          });
+
+          // Collapse menu after clicking on anchor links
+          mobilePanel.querySelectorAll("a").forEach((link) => {
+            link.addEventListener("click", () => {
+              mobilePanel.classList.remove("open");
+              if (mainContent) mainContent.classList.remove("mobile-menu-open");
+              if (mobileIcon) mobileIcon.style.transform = "rotate(0deg)";
+            });
+          });
+        }
+
+        // ── Paste ─────────────────────────────────────────────────────────────
+        pasteBtn.addEventListener("click", async () => {
+          try {
+            const t = await navigator.clipboard.readText();
+            if (t) input.value = t;
+          } catch (e) {
+            console.warn("Clipboard denied", e);
+          }
+        });
+
+        // ── Search ────────────────────────────────────────────────────────────
+        form.addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const query = input.value.trim();
+          if (!query) return;
+          setLoading(true);
+          hideError();
+          resultsSection.hidden = true;
+          try {
+            const res = await fetch("/api/fetch-media", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ profileUrl: query }),
+            });
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error || "Failed to fetch.");
+            renderResults(data);
+          } catch (err) {
+            showError(err.message);
+          } finally {
+            setLoading(false);
+          }
+        });
+
+        // ── Countdown button ─────────────────────────────────────────────────
+        let countdownTimer = null;
+        function setLoading(on) {
+          submitBtn.disabled = on;
+          btnSpinner.hidden = !on;
+          if (countdownTimer) {
+            clearInterval(countdownTimer);
+            countdownTimer = null;
+          }
+          if (on) {
+            let s = 10;
+            btnText.textContent = "Searching (" + s + "s)...";
+            countdownTimer = setInterval(() => {
+              s--;
+              btnText.textContent =
+                s > 0
+                  ? "Searching (" + s + "s)..."
+                  : "Searching (almost done)...";
+            }, 1000);
+          } else {
+            btnText.textContent = "SEARCH";
+          }
+        }
+
+        function showError(msg) {
+          errorBox.textContent = msg;
+          errorBox.hidden = false;
+        }
+        function hideError() {
+          errorBox.textContent = "";
+          errorBox.hidden = true;
+        }
+
+        // ── Render results ────────────────────────────────────────────────────
+        function renderResults(data) {
+          profileName.textContent = data.profileName;
+          profileHandle.textContent = "@" + data.username;
+          profileAvatar.referrerPolicy = "no-referrer";
+          profileAvatar.onerror = function () {
+            if (!this.dataset.proxied) {
+              this.dataset.proxied = "1";
+              this.src =
+                "/api/proxy-image?url=" + encodeURIComponent(data.avatarUrl);
+            }
+          };
+          profileAvatar.src = data.avatarUrl;
+
+          mediaGrid.innerHTML = "";
+          data.items.forEach((item) => {
+            const card = document.createElement("div");
+            card.className =
+              "relative aspect-[9/16] bg-[#0d0d0d] rounded-2xl border border-neutral-800 overflow-hidden cursor-pointer group transition-transform hover:scale-[1.03] hover:shadow-xl";
+
+            if (item.type === "video") {
+              const qualities = item.videoQualities || [];
+              const topQ =
+                qualities[0] &&
+                qualities[0].tag &&
+                qualities[0].tag.match(/(\d+p)/);
+              const topQLabel = topQ ? topQ[1] : "HD";
+              const hasAudio = !!item.audioUrl;
+              card.innerHTML =
+                '<div class="video-thumb-placeholder w-full h-full flex items-center justify-center bg-[#1a1a1a]">' +
+                '<svg width="48" height="48" viewBox="0 0 24 24" fill="white" opacity="0.6"><path d="M8 5v14l11-7z"/></svg>' +
+                "</div>" +
+                '<div class="absolute bottom-0 left-0 right-0 p-2 bg-gradient-to-t from-black/80 to-transparent flex items-end gap-1 flex-wrap">' +
+                '<span class="text-[10px] bg-black/60 text-white px-2 py-0.5 rounded">&#127909; ' +
+                item.timestamp +
+                "</span>" +
+                '<span class="text-[10px] bg-indigo-600/80 text-white px-2 py-0.5 rounded">' +
+                topQLabel +
+                (hasAudio ? " &#128266;" : "") +
+                "</span>" +
+                "</div>";
+            } else {
+              card.innerHTML =
+                '<img src="' +
+                item.thumbnailUrl +
+                '" alt="Story" loading="lazy" referrerpolicy="no-referrer" crossorigin="anonymous" class="w-full h-full object-cover">' +
+                '<div class="absolute bottom-0 left-0 right-0 p-2 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end gap-1">' +
+                '<span class="text-[10px] bg-black/60 text-white px-2 py-0.5 rounded">&#128444;&#65039; ' +
+                item.timestamp +
+                "</span>" +
+                "</div>";
+              const img = card.querySelector("img");
+              if (img) {
+                img.onerror = function () {
+                  if (!this.dataset.proxied) {
+                    this.dataset.proxied = "1";
+                    this.referrerPolicy = "origin";
+                    this.src =
+                      "/api/proxy-image?url=" +
+                      encodeURIComponent(item.thumbnailUrl);
+                  }
+                };
+              }
+            }
+
+            card.addEventListener("click", () => openModal(item));
+            mediaGrid.appendChild(card);
+          });
+
+          resultsSection.hidden = false;
+          resultsSection.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+
+        // ── Open modal ────────────────────────────────────────────────────────
+        function openModal(item) {
+          const mediaWrap = document.querySelector(".modal-media-wrapper");
+          const controls = document.getElementById("modal-controls");
+
+          if (item.type === "video") {
+            const qualities = item.videoQualities || [];
+            const firstUrl =
+              (qualities[0] && qualities[0].url) || item.mediaUrl;
+
+            // Quality selector HTML
+            var qHtml = "";
+            if (qualities.length > 1) {
+              var opts = qualities
+                .map(function (q, i) {
+                  var m = q.tag && q.tag.match(/(\d+p)/);
+                  var label = m ? m[1] : "Q" + i;
+                  var kbps = Math.round((q.bitrate || 0) / 1000);
+                  return (
+                    '<option value="' +
+                    i +
+                    '">' +
+                    label +
+                    (kbps ? " &mdash; " + kbps + " kbps" : "") +
+                    "</option>"
+                  );
+                })
+                .join("");
+              qHtml =
+                '<div class="flex items-center gap-2">' +
+                '<label class="text-gray-400 text-xs whitespace-nowrap">Quality:</label>' +
+                '<select id="quality-select" class="flex-1 bg-[#2a2a2a] text-white border border-neutral-700 rounded px-3 py-2 text-sm cursor-pointer">' +
+                opts +
+                "</select>" +
+                "</div>";
+            }
+
+            // Show video
+            mediaWrap.innerHTML =
+              '<video id="modal-video" controls autoplay class="max-w-full max-h-full object-contain"' +
+              ' src="/api/proxy-image?url=' +
+              encodeURIComponent(firstUrl) +
+              '"></video>';
+
+            // Show controls
+            controls.innerHTML =
+              qHtml +
+              '<div class="flex gap-2">' +
+              '<button id="render-btn" type="button" class="flex-1 py-3 bg-[#ff621f] hover:bg-[#e05316] text-white rounded-lg text-sm font-semibold transition-colors">Download with Audio</button>' +
+              '<button id="video-only-btn" type="button" class="py-3 px-4 bg-neutral-800 hover:bg-neutral-700 text-gray-300 rounded-lg text-sm transition-colors">Video only</button>' +
+              "</div>" +
+              '<p id="render-status" class="text-gray-500 text-xs text-center min-h-[16px]"></p>';
+
+            // Quality change updates video src
+            var qSel = document.getElementById("quality-select");
+            if (qSel) {
+              qSel.addEventListener("change", function () {
+                var vid = document.getElementById("modal-video");
+                var q = qualities[parseInt(this.value)];
+                if (vid && q)
+                  vid.src = "/api/proxy-image?url=" + encodeURIComponent(q.url);
+              });
+            }
+
+            function getSelUrl() {
+              var s = document.getElementById("quality-select");
+              var i = s ? parseInt(s.value) : 0;
+              return (qualities[i] && qualities[i].url) || item.mediaUrl;
+            }
+
+            // Download with audio (FFmpeg merge)
+            document.getElementById("render-btn").onclick = async function () {
+              var btn = this;
+              var status = document.getElementById("render-status");
+              var s2 = document.getElementById("quality-select");
+              var idx = s2 ? parseInt(s2.value) : 0;
+              var q = qualities[idx];
+              var label =
+                q && q.tag && q.tag.match(/(\d+p)/)
+                  ? q.tag.match(/(\d+p)/)[1]
+                  : "hd";
+              btn.disabled = true;
+              btn.textContent = "Rendering...";
+              if (status)
+                status.textContent =
+                  "Merging video + audio... this may take ~30s";
+              try {
+                var resp = await fetch("/api/render", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({
+                    videoUrl: getSelUrl(),
+                    audioUrl: item.audioUrl || null,
+                    filename:
+                      "story_" +
+                      (item.videoId || item.id || "video") +
+                      "_" +
+                      label,
+                  }),
+                });
+                if (!resp.ok) {
+                  var e2 = await resp.json().catch(function () {
+                    return {};
+                  });
+                  throw new Error(e2.error || "Render failed");
+                }
+                var blob = await resp.blob();
+                var burl = URL.createObjectURL(blob);
+                var a2 = document.createElement("a");
+                a2.href = burl;
+                a2.download = "story_" + label + ".mp4";
+                document.body.appendChild(a2);
+                a2.click();
+                document.body.removeChild(a2);
+                URL.revokeObjectURL(burl);
+                if (status) status.textContent = "Downloaded!";
+              } catch (err2) {
+                if (status) status.textContent = "Error: " + err2.message;
+              } finally {
+                btn.disabled = false;
+                btn.textContent = "Download with Audio";
+              }
+            };
+
+            // Video only
+            document.getElementById("video-only-btn").onclick = function () {
+              var s3 = document.getElementById("quality-select");
+              var qi = s3 ? parseInt(s3.value) : 0;
+              var q3 = qualities[qi];
+              var qlabel =
+                q3 && q3.tag && q3.tag.match(/(\d+p)/)
+                  ? q3.tag.match(/(\d+p)/)[1]
+                  : "hd";
+              var dlUrl =
+                "/api/proxy-image?url=" +
+                encodeURIComponent(getSelUrl()) +
+                "&dl=1&filename=story_" +
+                qlabel +
+                ".mp4";
+              window.open(dlUrl, "_blank");
+            };
+          } else {
+            // Photo
+            var rawUrl = item.mediaUrl;
+            var viewUrl = "/api/proxy-image?url=" + encodeURIComponent(rawUrl);
+            var dlUrl =
+              "/api/proxy-image?url=" +
+              encodeURIComponent(rawUrl) +
+              "&dl=1&filename=" +
+              (item.id || "story") +
+              ".jpg";
+
+            mediaWrap.innerHTML =
+              '<img src="' +
+              viewUrl +
+              '" alt="Story Photo" class="max-w-full max-h-full object-contain">';
+
+            controls.innerHTML =
+              '<button id="download-btn" type="button" class="w-full bg-[#ff621f] hover:bg-[#e05316] text-white font-semibold py-3 rounded-lg transition-colors">&#11015; Download High Res</button>' +
+              '<p id="dl-status" class="text-gray-500 text-xs text-center min-h-[16px]"></p>';
+
+            document.getElementById("download-btn").onclick =
+              async function () {
+                var btn = this;
+                var status = document.getElementById("dl-status");
+                btn.disabled = true;
+                btn.textContent = "&#9203; Downloading...";
+                if (status) status.textContent = "";
+                try {
+                  var resp = await fetch(dlUrl);
+                  if (!resp.ok)
+                    throw new Error("Server returned " + resp.status);
+                  var blob = await resp.blob();
+                  var burl = URL.createObjectURL(blob);
+                  var a2 = document.createElement("a");
+                  a2.href = burl;
+                  a2.download = (item.id || "story") + ".jpg";
+                  document.body.appendChild(a2);
+                  a2.click();
+                  document.body.removeChild(a2);
+                  URL.revokeObjectURL(burl);
+                  btn.textContent = "Downloaded!";
+                } catch (err2) {
+                  btn.textContent = "Error";
+                  if (status) status.textContent = err2.message;
+                } finally {
+                  setTimeout(function () {
+                    btn.textContent = "&#11015; Download High Res";
+                    btn.disabled = false;
+                  }, 2500);
+                }
+              };
+          }
+
+          modal.style.display = "flex";
+        }
+
+        // ── Close modal ───────────────────────────────────────────────────────
+        function closeModal() {
+          modal.style.display = "none";
+          var vid = document.getElementById("modal-video");
+          if (vid) {
+            vid.pause();
+            vid.src = "";
+          }
+          document.querySelector(".modal-media-wrapper").innerHTML =
+            '<img id="modal-img" src="" alt="" class="max-w-full max-h-full object-contain">';
+          document.getElementById("modal-controls").innerHTML =
+            '<button id="download-btn" type="button" class="w-full bg-[#ff621f] hover:bg-[#e05316] text-white font-semibold py-3 rounded-lg transition-colors">Download High Res</button>';
+        }
+
+        modalClose.addEventListener("click", closeModal);
+        modalOverlay.addEventListener("click", closeModal);
+      });
+    </script>
+  </body>
 </html>

@@ -1,0 +1,66 @@
+@config "../tailwind.config.js";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 36 33% 97%;
+    --foreground: 220 47% 11%;
+    --card: 0 0% 100%;
+    --card-foreground: 220 47% 11%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 47% 11%;
+    --primary: 220 47% 18%;
+    --primary-foreground: 36 33% 97%;
+    --secondary: 36 20% 92%;
+    --secondary-foreground: 220 47% 18%;
+    --muted: 36 20% 94%;
+    --muted-foreground: 220 15% 40%;
+    --accent: 39 50% 50%;
+    --accent-foreground: 220 47% 11%;
+    --destructive: 0 70% 45%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 220 13% 88%;
+    --input: 220 13% 88%;
+    --ring: 39 50% 50%;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 0 0% 4%;
+    --foreground: 0 0% 98%;
+    --card: 0 0% 8%;
+    --card-foreground: 0 0% 98%;
+    --popover: 0 0% 10%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 100%;
+    --primary-foreground: 0 0% 0%;
+    --secondary: 0 0% 13%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 11%;
+    --muted-foreground: 0 0% 70%;
+    --accent: 39 60% 60%;
+    --accent-foreground: 0 0% 0%;
+    --destructive: 0 70% 50%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 22%;
+    --input: 0 0% 22%;
+    --ring: 0 0% 70%;
+  }
+
+  * {
+    border-color: hsl(var(--border));
+  }
+
+  body {
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: "Lora", ui-serif, Georgia, serif;
+    letter-spacing: -0.025em;
+  }
+}
