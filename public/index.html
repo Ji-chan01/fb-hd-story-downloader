@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Public Media Viewer & Downloader</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  
+  <!-- Header / Nav -->
+  <header class="app-header">
+    <div class="container nav-content">
+      <div class="logo">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+        </svg>
+        <span>MediaViewer</span>
+      </div>
+      <nav class="nav-links">
+        <a href="#how-it-works">How It Works</a>
+        <a href="#faq">FAQ</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Top Ad Slot (Leaderboard Banner 728x90) -->
+  <div class="ad-container ad-top">
+    <div class="ad-placeholder">
+      <span class="ad-label">ADVERTISEMENT</span>
+      <div class="ad-box leaderboard">728 x 90 Leaderboard Ad</div>
+    </div>
+  </div>
+
+  <main class="container">
+    <!-- Search Section -->
+    <section class="search-section">
+      <h1>Anonymous Facebook Media Viewer</h1>
+      <p class="subtitle">View and download public Facebook photos, cover images, and media instantly.</p>
+      
+      <form id="search-form" class="search-box">
+        <div class="input-wrapper">
+          <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input type="text" id="profile-input" placeholder="Paste Facebook profile link or username (e.g. zuck)..." required autocomplete="off">
+          <button type="button" id="paste-btn" class="btn-secondary">Paste</button>
+        </div>
+        <button type="submit" id="submit-btn" class="btn-primary">
+          <span>Search Media</span>
+          <div class="spinner" id="btn-spinner" hidden></div>
+        </button>
+      </form>
+
+      <div id="error-box" class="error-box" hidden></div>
+    </section>
+
+    <!-- Mid-Content Ad Slot (In-feed Native / Banner) -->
+    <div class="ad-container ad-mid">
+      <div class="ad-placeholder">
+        <span class="ad-label">ADVERTISEMENT</span>
+        <div class="ad-box banner-mid">Responsive Native Banner Ad</div>
+      </div>
+    </div>
+
+    <!-- Results Section -->
+    <section id="results-section" class="results-section" hidden>
+      <div class="profile-card">
+        <img id="profile-avatar" src="" alt="Profile Avatar" class="avatar">
+        <div class="profile-info">
+          <h2 id="profile-name"></h2>
+          <p id="profile-handle" class="handle"></p>
+        </div>
+      </div>
+
+      <h3 class="section-title">Available Media Stories</h3>
+      <div id="media-grid" class="media-grid"></div>
+    </section>
+  </main>
+
+  <!-- Bottom Sticky Ad Slot -->
+  <div class="ad-container ad-footer-sticky">
+    <div class="ad-placeholder">
+      <span class="ad-label">ADVERTISEMENT</span>
+      <div class="ad-box sticky-banner">320x50 / 728x90 Mobile & Desktop Sticky Banner</div>
+    </div>
+  </div>
+
+  <!-- Media Download Modal -->
+  <div id="media-modal" class="modal" hidden>
+    <div class="modal-overlay" id="modal-overlay"></div>
+    <div class="modal-content">
+      <button class="modal-close" id="modal-close">&times;</button>
+      <div class="modal-body">
+        <div class="modal-media-wrapper">
+          <img id="modal-img" src="" alt="Media Preview">
+        </div>
+        <div class="modal-actions">
+          <a id="download-btn" href="#" download class="btn-primary download-link">Download High Res</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
