@@ -4,6 +4,11 @@ const rateLimit = require("express-rate-limit");
 const axios = require("axios");
 const { HttpsProxyAgent } = require("https-proxy-agent");
 const path = require("path");
+const os = require("os");
+const fs = require("fs");
+const ffmpeg = require("fluent-ffmpeg");
+const ffmpegPath = require("ffmpeg-static");
+ffmpeg.setFfmpegPath(ffmpegPath);
 require("dotenv").config();
 
 const { scrapeFacebookProfile } = require("./lib/facebookScraper");
@@ -80,6 +85,72 @@ app.get("/api/proxy-image", async (req, res) => {
 app.post("/api/clear-cache", (req, res) => {
   cache.clear();
   res.json({ ok: true, message: "Cache cleared" });
+});
+
+// Render endpoint — downloads video + audio from Facebook CDN and merges with FFmpeg
+// This is the same "Render" step that sites like bravedown.com do to combine DASH streams
+app.post("/api/render", async (req, res) => {
+  const { videoUrl, audioUrl, filename } = req.body;
+  if (!videoUrl) return res.status(400).json({ error: "videoUrl is required" });
+
+  const tmpDir = os.tmpdir();
+  const videoFile = path.join(tmpDir, `fb_video_${Date.now()}.mp4`);
+  const audioFile = audioUrl ? path.join(tmpDir, `fb_audio_${Date.now()}.aac`) : null;
+  const outFile = path.join(tmpDir, `fb_merged_${Date.now()}.mp4`);
+
+  const fbHeaders = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "Referer": "https://www.facebook.com/",
+  };
+
+  // Helper: download a URL to a local temp file
+  async function downloadToFile(url, dest) {
+    const resp = await axios.get(url, { responseType: "stream", headers: fbHeaders, timeout: 60000 });
+    return new Promise((resolve, reject) => {
+      const stream = fs.createWriteStream(dest);
+      resp.data.pipe(stream);
+      stream.on("finish", resolve);
+      stream.on("error", reject);
+    });
+  }
+
+  try {
+    console.log(`[Render] Downloading video: ${videoUrl.slice(0, 70)}...`);
+    await downloadToFile(videoUrl, videoFile);
+
+    if (audioUrl && audioFile) {
+      console.log(`[Render] Downloading audio: ${audioUrl.slice(0, 70)}...`);
+      await downloadToFile(audioUrl, audioFile);
+    }
+
+    console.log("[Render] Merging with FFmpeg...");
+
+    await new Promise((resolve, reject) => {
+      const cmd = ffmpeg(videoFile);
+      if (audioFile && fs.existsSync(audioFile)) cmd.input(audioFile);
+      cmd
+        .outputOptions(["-c:v copy", "-c:a aac", "-shortest", "-movflags +faststart"])
+        .output(outFile)
+        .on("end", resolve)
+        .on("error", reject)
+        .run();
+    });
+
+    console.log("[Render] Done. Streaming merged MP4...");
+    const safeName = (filename || "story").replace(/[^a-z0-9_-]/gi, "_");
+    res.setHeader("Content-Disposition", `attachment; filename="${safeName}.mp4"`);
+    res.setHeader("Content-Type", "video/mp4");
+    const readStream = fs.createReadStream(outFile);
+    readStream.pipe(res);
+    readStream.on("end", () => {
+      // Cleanup temp files
+      [videoFile, audioFile, outFile].forEach(f => f && fs.unlink(f, () => {}));
+    });
+  } catch (err) {
+    console.error("[Render] Error:", err.message);
+    [videoFile, audioFile, outFile].forEach(f => f && fs.unlink(f, () => {}));
+    res.status(500).json({ error: "Render failed: " + err.message });
+  }
 });
 
 // 3. API Endpoint for Facebook Public Media Extraction
