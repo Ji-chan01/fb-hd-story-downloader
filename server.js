@@ -40,14 +40,18 @@ app.use("/api/", apiLimiter);
 
 // Simple In-Memory Cache (In production, replace with Redis)
 const cache = new Map();
-const CACHE_TTL_MS = 2 * 60 * 1000; // 2 minutes — story CDN URLs expire quickly
+cache.clear();
+const CACHE_TTL_MS = 10 * 1000; // 10 seconds — short cache so users get fresh media
 
 // 2. Media Proxy Endpoint — forwards Range headers so video streaming and seeking work
 app.get("/api/proxy-image", async (req, res) => {
-  const imageUrl = req.query.url;
+  let imageUrl = req.query.url;
   if (!imageUrl) {
     return res.status(400).send("Missing URL");
   }
+
+  // Clean &amp; HTML entity unescaping if present
+  imageUrl = imageUrl.replace(/&amp;/g, "&");
 
   try {
     // Forward Range header if the browser sent one (needed for video seeking/buffering)
@@ -73,10 +77,17 @@ app.get("/api/proxy-image", async (req, res) => {
     for (const h of forwardHeaders) {
       if (response.headers[h]) res.setHeader(h, response.headers[h]);
     }
+
+    if (req.query.filename || req.query.dl === "1") {
+      const filename = (req.query.filename || "story-photo.jpg").replace(/[^a-z0-9_.-]/gi, "_");
+      res.setHeader("Content-Disposition", `attachment; filename="${filename}"`);
+    }
+
     res.setHeader("Cache-Control", "public, max-age=3600");
     res.setHeader("Access-Control-Allow-Origin", "*");
     response.data.pipe(res);
   } catch (err) {
+    console.error("[Proxy Image Error]:", err.message);
     res.status(404).send("Media unavailable");
   }
 });

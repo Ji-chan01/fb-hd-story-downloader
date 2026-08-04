@@ -235,9 +235,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     } else {
       // Image
-      wrapper.innerHTML = `<img id="modal-img" src="${item.mediaUrl}" alt="Story Photo"
-        referrerpolicy="no-referrer" style="width:100%;height:100%;object-fit:contain;border-radius:8px;">`;
-      downloadBtn.href = `/api/proxy-image?url=${encodeURIComponent(item.mediaUrl)}`;
+      const proxyUrl = `/api/proxy-image?url=${encodeURIComponent(item.mediaUrl)}&filename=${item.id}.jpg`;
+      wrapper.innerHTML = `<img id="modal-img" src="${proxyUrl}" alt="Story Photo"
+        style="width:100%;height:100%;object-fit:contain;border-radius:8px;">`;
+      downloadBtn.href = proxyUrl;
       downloadBtn.setAttribute('download', `${item.id}.jpg`);
       downloadBtn.hidden = false;
     }
