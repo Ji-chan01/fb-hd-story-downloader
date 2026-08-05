@@ -544,6 +544,7 @@
             });
             const data = await res.json();
             if (!res.ok) throw new Error(data.error || "Failed to fetch!");
+            renderResults(data);
           } catch (err) {
             showError(err.message);
           } finally {
