@@ -9,6 +9,13 @@ const fs = require("fs");
 const ffmpeg = require("fluent-ffmpeg");
 const ffmpegPath = require("ffmpeg-static");
 ffmpeg.setFfmpegPath(ffmpegPath);
+
+// Force Vercel (NFT) to trace and bundle the ffmpeg binary
+if (process.env.VERCEL) {
+  const traceFfmpeg = path.join(__dirname, "node_modules", "ffmpeg-static", "ffmpeg");
+  fs.existsSync(traceFfmpeg);
+}
+
 require("dotenv").config();
 
 const { scrapeFacebookProfile } = require("./lib/facebookScraper");

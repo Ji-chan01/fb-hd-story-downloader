@@ -2,7 +2,7 @@
   "version": 2,
   "functions": {
     "**/*": {
-      "includeFiles": "node_modules/ffmpeg-static/ffmpeg"
+      "includeFiles": "node_modules/ffmpeg-static/**/*"
     }
   },
   "routes": [
