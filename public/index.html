@@ -36,23 +36,19 @@
       }
       /* Mobile Panel Slide Transition */
       #mobile-nav-panel {
-        max-height: 0;
+        height: 0;
         opacity: 0;
         overflow: hidden;
         transition:
-          max-height 0.3s ease-out,
-          opacity 0.2s ease-out;
+          height 0.3s ease-in-out,
+          opacity 0.3s ease-in-out;
       }
       #mobile-nav-panel.open {
-        max-height: 200px;
         opacity: 1;
       }
       /* Main Content Push Transition */
       main {
-        transition: padding-top 0.3s ease-out;
-      }
-      main.mobile-menu-open {
-        padding-top: 240px; /* pushes main content down when menu opens */
+        transition: padding-top 0.3s ease-in-out;
       }
     </style>
   </head>
@@ -485,8 +481,17 @@
         if (mobileToggle && mobilePanel) {
           mobileToggle.addEventListener("click", () => {
             const isOpen = mobilePanel.classList.toggle("open");
-            if (mainContent) {
-              mainContent.classList.toggle("mobile-menu-open", isOpen);
+            if (isOpen) {
+              const panelHeight = mobilePanel.scrollHeight;
+              mobilePanel.style.height = `${panelHeight}px`;
+              if (mainContent) {
+                mainContent.style.paddingTop = `${112 + panelHeight}px`;
+              }
+            } else {
+              mobilePanel.style.height = "0px";
+              if (mainContent) {
+                mainContent.style.paddingTop = "112px";
+              }
             }
             if (mobileIcon) {
               if (isOpen) {
@@ -501,7 +506,10 @@
           mobilePanel.querySelectorAll("a").forEach((link) => {
             link.addEventListener("click", () => {
               mobilePanel.classList.remove("open");
-              if (mainContent) mainContent.classList.remove("mobile-menu-open");
+              mobilePanel.style.height = "0px";
+              if (mainContent) {
+                mainContent.style.paddingTop = "112px";
+              }
               if (mobileIcon) mobileIcon.style.transform = "rotate(0deg)";
             });
           });
