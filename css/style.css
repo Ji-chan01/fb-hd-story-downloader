@@ -263,7 +263,6 @@ body {
   max-width: 600px;
   margin: 16px auto 0;
   padding: 12px 16px;
-  background-color: rgba(239, 68, 68, 0.1);
   border: 1px solid var(--danger-color);
   border-radius: var(--radius-sm);
   color: var(--danger-color);
