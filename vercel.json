@@ -1,7 +1,7 @@
 {
   "version": 2,
   "functions": {
-    "server.js": {
+    "**/*": {
       "includeFiles": "node_modules/ffmpeg-static/ffmpeg"
     }
   },
