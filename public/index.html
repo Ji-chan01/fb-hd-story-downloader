@@ -470,9 +470,6 @@
         const btnText = document.getElementById("btn-text");
         const errorBox = document.getElementById("error-box");
         const resultsSection = document.getElementById("results-section");
-        const profileAvatar = document.getElementById("profile-avatar");
-        const profileName = document.getElementById("profile-name");
-        const profileHandle = document.getElementById("profile-handle");
         const mediaGrid = document.getElementById("media-grid");
         const modal = document.getElementById("media-modal");
         const modalClose = document.getElementById("modal-close");
@@ -588,19 +585,6 @@
           errorBox.hidden = true;
         }
 
-        // ── Render results ────────────────────────────────────────────────────
-        function renderResults(data) {
-          profileName.textContent = data.profileName;
-          profileHandle.textContent = "@" + data.username;
-          profileAvatar.referrerPolicy = "no-referrer";
-          profileAvatar.onerror = function () {
-            if (!this.dataset.proxied) {
-              this.dataset.proxied = "1";
-              this.src =
-                "/api/proxy-image?url=" + encodeURIComponent(data.avatarUrl);
-            }
-          };
-          profileAvatar.src = data.avatarUrl;
 
           mediaGrid.innerHTML = "";
           data.items.forEach((item) => {
