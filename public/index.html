@@ -15,7 +15,13 @@
         scroll-behavior: smooth;
       }
       body {
-        background: linear-gradient(to bottom, #000000 0%, #030305 50%, #0b0d19 80%, #151c33 100%);
+        background: linear-gradient(
+          to bottom,
+          #000000 0%,
+          #030305 50%,
+          #0b0d19 80%,
+          #151c33 100%
+        );
         background-attachment: scroll;
         min-height: 100vh;
       }
@@ -295,7 +301,9 @@
           Frequently Asked Questions (FAQ)
         </h2>
         <div class="space-y-4">
-          <div class="faq-item group rounded-xl bg-black overflow-hidden border border-transparent">
+          <div
+            class="faq-item group rounded-xl bg-black overflow-hidden border border-transparent"
+          >
             <button
               class="faq-trigger flex justify-between items-center w-full p-5 text-lg font-medium text-gray-200 cursor-pointer text-left select-none"
             >
@@ -305,7 +313,9 @@
                 class="w-6 h-6 transition-transform duration-300 faq-icon"
               ></i>
             </button>
-            <div class="faq-content grid grid-rows-[0fr] transition-[grid-template-rows] duration-300 ease-in-out">
+            <div
+              class="faq-content grid grid-rows-[0fr] transition-[grid-template-rows] duration-300 ease-in-out"
+            >
               <div class="overflow-hidden">
                 <div class="p-5 pt-0 text-gray-400 mt-2">
                   No, you do not need to log into your account. The tool works
@@ -314,7 +324,9 @@
               </div>
             </div>
           </div>
-          <div class="faq-item group rounded-xl bg-black overflow-hidden border border-transparent">
+          <div
+            class="faq-item group rounded-xl bg-black overflow-hidden border border-transparent"
+          >
             <button
               class="faq-trigger flex justify-between items-center w-full p-5 text-lg font-medium text-gray-200 cursor-pointer text-left select-none"
             >
@@ -324,17 +336,21 @@
                 class="w-6 h-6 transition-transform duration-300 faq-icon"
               ></i>
             </button>
-            <div class="faq-content grid grid-rows-[0fr] transition-[grid-template-rows] duration-300 ease-in-out">
+            <div
+              class="faq-content grid grid-rows-[0fr] transition-[grid-template-rows] duration-300 ease-in-out"
+            >
               <div class="overflow-hidden">
                 <div class="p-5 pt-0 text-gray-400 mt-2">
                   No personal data is collected or stored. All requests are
-                  processed on-the-fly and destroyed immediately after your session
-                  ends.
+                  processed on-the-fly and destroyed immediately after your
+                  session ends.
                 </div>
               </div>
             </div>
           </div>
-          <div class="faq-item group rounded-xl bg-black overflow-hidden border border-transparent">
+          <div
+            class="faq-item group rounded-xl bg-black overflow-hidden border border-transparent"
+          >
             <button
               class="faq-trigger flex justify-between items-center w-full p-5 text-lg font-medium text-gray-200 cursor-pointer text-left select-none"
             >
@@ -344,16 +360,20 @@
                 class="w-6 h-6 transition-transform duration-300 faq-icon"
               ></i>
             </button>
-            <div class="faq-content grid grid-rows-[0fr] transition-[grid-template-rows] duration-300 ease-in-out">
+            <div
+              class="faq-content grid grid-rows-[0fr] transition-[grid-template-rows] duration-300 ease-in-out"
+            >
               <div class="overflow-hidden">
                 <div class="p-5 pt-0 text-gray-400 mt-2">
-                  No. This tool strictly accesses publicly available information and
-                  cannot bypass private security settings.
+                  No. This tool strictly accesses publicly available information
+                  and cannot bypass private security settings.
                 </div>
               </div>
             </div>
           </div>
-          <div class="faq-item group rounded-xl bg-black overflow-hidden border border-transparent">
+          <div
+            class="faq-item group rounded-xl bg-black overflow-hidden border border-transparent"
+          >
             <button
               class="faq-trigger flex justify-between items-center w-full p-5 text-lg font-medium text-gray-200 cursor-pointer text-left select-none"
             >
@@ -363,11 +383,13 @@
                 class="w-6 h-6 transition-transform duration-300 faq-icon"
               ></i>
             </button>
-            <div class="faq-content grid grid-rows-[0fr] transition-[grid-template-rows] duration-300 ease-in-out">
+            <div
+              class="faq-content grid grid-rows-[0fr] transition-[grid-template-rows] duration-300 ease-in-out"
+            >
               <div class="overflow-hidden">
                 <div class="p-5 pt-0 text-gray-400 mt-2">
-                  Yes, story owners will not see your profile listed in their story
-                  viewer list.
+                  Yes, story owners will not see your profile listed in their
+                  story viewer list.
                 </div>
               </div>
             </div>
@@ -586,14 +608,14 @@
           if (!query) return;
 
           // Open CPM ad link in a new tab
-          // try {
-          //   window.open(
-          //     "https://www.effectivecpmnetwork.com/rg132d64f?key=f55e3e18176e1ad3d77dad40ffb78949",
-          //     "_blank",
-          //   );
-          // } catch (err) {
-          //   console.warn("Popunder blocked", err);
-          // }
+          try {
+            window.open(
+              "https://www.effectivecpmnetwork.com/rg132d64f?key=f55e3e18176e1ad3d77dad40ffb78949",
+              "_blank",
+            );
+          } catch (err) {
+            console.warn("Popunder blocked", err);
+          }
 
           setLoading(true);
           hideError();
