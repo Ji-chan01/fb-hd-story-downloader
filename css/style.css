@@ -24,7 +24,11 @@
 }
 
 body {
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-family:
+    "Inter",
+    system-ui,
+    -apple-system,
+    sans-serif;
   background-color: var(--bg-primary);
   color: var(--text-primary);
   line-height: 1.5;
@@ -109,9 +113,21 @@ body {
   font-size: 0.85rem;
 }
 
-.leaderboard { width: 728px; height: 90px; max-width: 100%; }
-.banner-mid { width: 100%; max-width: 800px; height: 120px; }
-.sticky-banner { width: 728px; height: 60px; max-width: 100%; }
+.leaderboard {
+  width: 728px;
+  height: 90px;
+  max-width: 100%;
+}
+.banner-mid {
+  width: 100%;
+  max-width: 800px;
+  height: 120px;
+}
+.sticky-banner {
+  width: 728px;
+  height: 60px;
+  max-width: 100%;
+}
 
 .ad-footer-sticky {
   position: sticky;
@@ -173,7 +189,9 @@ body {
   color: var(--text-primary);
   font-size: 1rem;
   outline: none;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
 }
 
 .input-wrapper input:focus {
@@ -211,7 +229,9 @@ body {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  transition: background-color 0.2s, transform 0.1s;
+  transition:
+    background-color 0.2s,
+    transform 0.1s;
 }
 
 .btn-primary:hover {
@@ -233,7 +253,9 @@ body {
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* Error Box */
@@ -272,8 +294,14 @@ body {
   background-color: var(--bg-card);
 }
 
-.profile-name { font-size: 1.25rem; font-weight: 600; }
-.handle { color: var(--text-secondary); font-size: 0.9rem; }
+.profile-name {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+.handle {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
 
 .section-title {
   font-size: 1.25rem;
@@ -294,7 +322,9 @@ body {
   position: relative;
   aspect-ratio: 9 / 16;
   border: 1px solid rgba(255, 255, 255, 0.05);
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
   cursor: pointer;
 }
 
@@ -315,7 +345,7 @@ body {
   left: 0;
   right: 0;
   padding: 12px;
-  background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
@@ -329,7 +359,10 @@ body {
 /* Modal */
 .modal {
   position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -338,7 +371,10 @@ body {
 
 .modal-overlay {
   position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   background: rgba(0, 0, 0, 0.85);
   backdrop-filter: blur(8px);
 }
