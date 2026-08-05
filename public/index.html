@@ -544,7 +544,6 @@
             });
             const data = await res.json();
             if (!res.ok) throw new Error(data.error || "Failed to fetch!");
-
           } catch (err) {
             showError(err.message);
           } finally {
@@ -585,7 +584,8 @@
           errorBox.hidden = true;
         }
 
-
+        // ── Render results ────────────────────────────────────────────────────
+        function renderResults(data) {
           mediaGrid.innerHTML = "";
           data.items.forEach((item) => {
             const card = document.createElement("div");
@@ -650,7 +650,7 @@
 
           resultsSection.hidden = false;
           resultsSection.scrollIntoView({ behavior: "smooth", block: "start" });
-        })
+        }
 
         // ── Open modal ────────────────────────────────────────────────────────
         function openModal(item) {
