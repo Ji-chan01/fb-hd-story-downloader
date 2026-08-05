@@ -903,7 +903,7 @@
                 var btn = this;
                 var status = document.getElementById("dl-status");
                 btn.disabled = true;
-                btn.textContent = "&#9203; Downloading...";
+                btn.textContent = "Downloading...";
                 if (status) status.textContent = "";
                 try {
                   var resp = await fetch(dlUrl);
