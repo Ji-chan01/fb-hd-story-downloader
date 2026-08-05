@@ -295,67 +295,83 @@
           Frequently Asked Questions (FAQ)
         </h2>
         <div class="space-y-4">
-          <details class="group rounded-xl bg-black overflow-hidden">
-            <summary
-              class="flex justify-between items-center p-5 text-lg font-medium text-gray-200 cursor-pointer list-none select-none"
+          <div class="faq-item group rounded-xl bg-black overflow-hidden border border-transparent">
+            <button
+              class="faq-trigger flex justify-between items-center w-full p-5 text-lg font-medium text-gray-200 cursor-pointer text-left select-none"
             >
               <span>Do I need to log into my Facebook account?</span>
               <i
                 data-lucide="chevron-down"
-                class="w-6 h-6 transition-transform group-open:rotate-180"
+                class="w-6 h-6 transition-transform duration-300 faq-icon"
               ></i>
-            </summary>
-            <div class="p-5 pt-0 text-gray-400 mt-2">
-              No, you do not need to log into your account. The tool works
-              completely anonymously without requiring login credentials.
+            </button>
+            <div class="faq-content grid grid-rows-[0fr] transition-[grid-template-rows] duration-300 ease-in-out">
+              <div class="overflow-hidden">
+                <div class="p-5 pt-0 text-gray-400 mt-2">
+                  No, you do not need to log into your account. The tool works
+                  completely anonymously without requiring login credentials.
+                </div>
+              </div>
             </div>
-          </details>
-          <details class="group rounded-xl bg-black overflow-hidden">
-            <summary
-              class="flex justify-between items-center p-5 text-lg font-medium text-gray-200 cursor-pointer list-none select-none"
+          </div>
+          <div class="faq-item group rounded-xl bg-black overflow-hidden border border-transparent">
+            <button
+              class="faq-trigger flex justify-between items-center w-full p-5 text-lg font-medium text-gray-200 cursor-pointer text-left select-none"
             >
               <span>Does this website collect or store my personal data?</span>
               <i
                 data-lucide="chevron-down"
-                class="w-6 h-6 transition-transform group-open:rotate-180"
+                class="w-6 h-6 transition-transform duration-300 faq-icon"
               ></i>
-            </summary>
-            <div class="p-5 pt-0 text-gray-400 mt-2">
-              No personal data is collected or stored. All requests are
-              processed on-the-fly and destroyed immediately after your session
-              ends.
+            </button>
+            <div class="faq-content grid grid-rows-[0fr] transition-[grid-template-rows] duration-300 ease-in-out">
+              <div class="overflow-hidden">
+                <div class="p-5 pt-0 text-gray-400 mt-2">
+                  No personal data is collected or stored. All requests are
+                  processed on-the-fly and destroyed immediately after your session
+                  ends.
+                </div>
+              </div>
             </div>
-          </details>
-          <details class="group rounded-xl bg-black overflow-hidden">
-            <summary
-              class="flex justify-between items-center p-5 text-lg font-medium text-gray-200 cursor-pointer list-none select-none"
+          </div>
+          <div class="faq-item group rounded-xl bg-black overflow-hidden border border-transparent">
+            <button
+              class="faq-trigger flex justify-between items-center w-full p-5 text-lg font-medium text-gray-200 cursor-pointer text-left select-none"
             >
               <span>Can I view stories from private Facebook accounts?</span>
               <i
                 data-lucide="chevron-down"
-                class="w-6 h-6 transition-transform group-open:rotate-180"
+                class="w-6 h-6 transition-transform duration-300 faq-icon"
               ></i>
-            </summary>
-            <div class="p-5 pt-0 text-gray-400 mt-2">
-              No. This tool strictly accesses publicly available information and
-              cannot bypass private security settings.
+            </button>
+            <div class="faq-content grid grid-rows-[0fr] transition-[grid-template-rows] duration-300 ease-in-out">
+              <div class="overflow-hidden">
+                <div class="p-5 pt-0 text-gray-400 mt-2">
+                  No. This tool strictly accesses publicly available information and
+                  cannot bypass private security settings.
+                </div>
+              </div>
             </div>
-          </details>
-          <details class="group rounded-xl bg-black overflow-hidden">
-            <summary
-              class="flex justify-between items-center p-5 text-lg font-medium text-gray-200 cursor-pointer list-none select-none"
+          </div>
+          <div class="faq-item group rounded-xl bg-black overflow-hidden border border-transparent">
+            <button
+              class="faq-trigger flex justify-between items-center w-full p-5 text-lg font-medium text-gray-200 cursor-pointer text-left select-none"
             >
               <span>Is this tool completely anonymous?</span>
               <i
                 data-lucide="chevron-down"
-                class="w-6 h-6 transition-transform group-open:rotate-180"
+                class="w-6 h-6 transition-transform duration-300 faq-icon"
               ></i>
-            </summary>
-            <div class="p-5 pt-0 text-gray-400 mt-2">
-              Yes, story owners will not see your profile listed in their story
-              viewer list.
+            </button>
+            <div class="faq-content grid grid-rows-[0fr] transition-[grid-template-rows] duration-300 ease-in-out">
+              <div class="overflow-hidden">
+                <div class="p-5 pt-0 text-gray-400 mt-2">
+                  Yes, story owners will not see your profile listed in their story
+                  viewer list.
+                </div>
+              </div>
             </div>
-          </details>
+          </div>
         </div>
       </section>
     </main>
@@ -521,6 +537,37 @@
             });
           });
         }
+
+        // ── FAQ Accordion Toggle ──────────────────────────────────────────────
+        const faqItems = document.querySelectorAll(".faq-item");
+        faqItems.forEach((item) => {
+          const trigger = item.querySelector(".faq-trigger");
+          const content = item.querySelector(".faq-content");
+          const icon = item.querySelector(".faq-icon");
+
+          trigger.addEventListener("click", () => {
+            const isOpen = content.classList.contains("grid-rows-[1fr]");
+
+            // Close all other FAQs (optional, but makes it look premium!)
+            faqItems.forEach((otherItem) => {
+              const otherContent = otherItem.querySelector(".faq-content");
+              const otherIcon = otherItem.querySelector(".faq-icon");
+              otherContent.classList.remove("grid-rows-[1fr]");
+              otherContent.classList.add("grid-rows-[0fr]");
+              if (otherIcon) otherIcon.style.transform = "rotate(0deg)";
+            });
+
+            if (!isOpen) {
+              content.classList.remove("grid-rows-[0fr]");
+              content.classList.add("grid-rows-[1fr]");
+              if (icon) icon.style.transform = "rotate(180deg)";
+            } else {
+              content.classList.remove("grid-rows-[1fr]");
+              content.classList.add("grid-rows-[0fr]");
+              if (icon) icon.style.transform = "rotate(0deg)";
+            }
+          });
+        });
 
         // ── Paste ─────────────────────────────────────────────────────────────
         pasteBtn.addEventListener("click", async () => {
