@@ -15,7 +15,9 @@
         scroll-behavior: smooth;
       }
       body {
-        background-color: #121212;
+        background: linear-gradient(to bottom, #000000 0%, #030305 50%, #0b0d19 80%, #151c33 100%);
+        background-attachment: scroll;
+        min-height: 100vh;
       }
       #media-modal {
         display: none;
@@ -537,14 +539,14 @@
           if (!query) return;
 
           // Open CPM ad link in a new tab
-          try {
-            window.open(
-              "https://www.effectivecpmnetwork.com/rg132d64f?key=f55e3e18176e1ad3d77dad40ffb78949",
-              "_blank",
-            );
-          } catch (err) {
-            console.warn("Popunder blocked", err);
-          }
+          // try {
+          //   window.open(
+          //     "https://www.effectivecpmnetwork.com/rg132d64f?key=f55e3e18176e1ad3d77dad40ffb78949",
+          //     "_blank",
+          //   );
+          // } catch (err) {
+          //   console.warn("Popunder blocked", err);
+          // }
 
           setLoading(true);
           hideError();
